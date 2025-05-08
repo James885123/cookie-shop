@@ -1,0 +1,15 @@
+# PHPStorm 项目文件
+.idea/
+
+# VS Code 项目文件
+.vscode/
+
+# 临时文件
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# 配置文件（包含敏感信息）
+# admin/config.php 

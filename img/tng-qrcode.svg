@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#f1f1f1"/>
+  <g transform="translate(35, 35)">
+    <!-- 简化的二维码图案 -->
+    <rect x="0" y="0" width="130" height="130" fill="#f1f1f1"/>
+    <rect x="10" y="10" width="30" height="30" fill="#FF6600"/>
+    <rect x="50" y="10" width="30" height="30" fill="#FF6600"/>
+    <rect x="90" y="10" width="30" height="30" fill="#FF6600"/>
+    <rect x="10" y="50" width="30" height="30" fill="#FF6600"/>
+    <rect x="50" y="50" width="30" height="30" fill="white"/>
+    <rect x="90" y="50" width="30" height="30" fill="#FF6600"/>
+    <rect x="10" y="90" width="30" height="30" fill="#FF6600"/>
+    <rect x="50" y="90" width="30" height="30" fill="#FF6600"/>
+    <rect x="90" y="90" width="30" height="30" fill="#FF6600"/>
+  </g>
+  <!-- TNG标志 -->
+  <rect x="85" y="75" width="30" height="50" fill="white"/>
+  <text x="100" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#FF6600">TNG</text>
+</svg> 
