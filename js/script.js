@@ -436,6 +436,8 @@ function showPaymentOptions(total) {
     
     const paymentPanel = document.createElement('div');
     paymentPanel.className = 'payment-panel';
+    paymentPanel.style.maxHeight = '85vh';
+    paymentPanel.style.overflow = 'auto';
     paymentPanel.innerHTML = `
         <div class="payment-header">
             <h3>选择支付方式</h3>

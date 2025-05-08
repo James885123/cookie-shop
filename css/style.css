@@ -715,6 +715,9 @@ footer {
     color: white;
     position: relative;
     overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .payment-header::after {
@@ -757,10 +760,10 @@ footer {
 }
 
 .payment-order-summary {
-    padding: 25px;
+    padding: 20px;
     border-bottom: 1px solid #f0f0f0;
-    max-height: 300px;
     overflow-y: auto;
+    max-height: 30vh;
 }
 
 .payment-order-summary h4 {
@@ -1709,6 +1712,8 @@ footer {
     margin: 15px 0;
     border: 1px solid #eee;
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .whatsapp-orders-preview h4 {
@@ -1717,17 +1722,21 @@ footer {
     margin-bottom: 10px;
     border-bottom: 1px dashed #ddd;
     padding-bottom: 8px;
+    position: sticky;
+    top: 0;
+    background: #f9f9f9;
+    z-index: 1;
 }
 
 .whatsapp-order-items {
-    max-height: 200px;
-    overflow-y: auto;
+    max-height: 100%;
+    overflow-y: visible;
 }
 
 .whatsapp-order-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px 5px;
+    padding: 6px 5px;
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -1739,17 +1748,55 @@ footer {
     flex: 1;
     font-weight: 500;
     color: var(--dark-color);
+    font-size: 0.95rem;
 }
 
 .whatsapp-order-item .item-quantity {
-    flex: 0 0 50px;
+    flex: 0 0 40px;
     text-align: center;
     color: var(--light-text);
+    font-size: 0.95rem;
 }
 
 .whatsapp-order-item .item-price {
-    flex: 0 0 80px;
+    flex: 0 0 70px;
     text-align: right;
     font-weight: 600;
     color: var(--primary-color);
+    font-size: 0.95rem;
+}
+
+/* 响应式调整 */
+@media (min-width: 992px) {
+    .payment-panel {
+        max-width: 650px;
+    }
+    
+    .payment-order-summary {
+        max-height: 300px;
+    }
+    
+    .payment-options {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .payment-option {
+        width: 45%;
+    }
+    
+    .whatsapp-orders-preview {
+        max-height: 250px;
+    }
+    
+    .whatsapp-contacts {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .whatsapp-button {
+        flex: 1;
+    }
 } 
