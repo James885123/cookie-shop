@@ -549,6 +549,26 @@ function showTngPaymentForm(container, total) {
                 <img src="img/tng-qrcode.svg" alt="TNG QR Code" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23f1f1f1\\'/><rect x=\\'50\\' y=\\'50\\' width=\\'100\\' height=\\'100\\' fill=\\'%23FF6600\\'/><rect x=\\'70\\' y=\\'70\\' width=\\'60\\' height=\\'60\\' fill=\\'white\\'/></svg>';">
             </div>
             <p>金额: <strong>RM${total.toFixed(2)}</strong></p>
+            <div class="form-group">
+                <label for="customer-name">收件人姓名</label>
+                <input type="text" id="customer-name" placeholder="请输入收件人姓名" required>
+            </div>
+            <div class="form-group">
+                <label for="customer-phone">联系电话</label>
+                <input type="tel" id="customer-phone" placeholder="请输入您的联系电话" required>
+            </div>
+            <div class="form-group">
+                <label for="customer-email">电子邮箱</label>
+                <input type="email" id="customer-email" placeholder="请输入您的电子邮箱" required>
+            </div>
+            <div class="form-group">
+                <label for="customer-address">配送地址</label>
+                <textarea id="customer-address" rows="3" placeholder="请输入您的详细地址" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="order-notes">备注 (可选)</label>
+                <textarea id="order-notes" rows="2" placeholder="如有特殊要求请备注"></textarea>
+            </div>
             <button class="payment-button" id="tng-confirm-btn">确认支付</button>
         </div>
     `;
@@ -581,13 +601,8 @@ function showTngPaymentForm(container, total) {
             `;
             document.head.appendChild(spinnerStyle);
             
-            setTimeout(() => {
-                // 清空购物车
-                clearCart();
-                
-                // 显示支付成功
-                showPaymentSuccess(container.closest('.payment-panel'));
-            }, 2000);
+            // 调用confirmPayment函数发送订单到服务器
+            confirmPayment('TNG eWallet');
         });
     }
 }
@@ -597,20 +612,24 @@ function showCashPaymentForm(container, total) {
     container.innerHTML = `
         <form class="cash-payment-form">
             <div class="form-group">
-                <label for="delivery-address">配送地址</label>
-                <textarea id="delivery-address" rows="3" placeholder="请输入您的详细地址" required></textarea>
+                <label for="customer-name">收件人姓名</label>
+                <input type="text" id="customer-name" placeholder="请输入收件人姓名" required>
             </div>
             <div class="form-group">
-                <label for="delivery-phone">联系电话</label>
-                <input type="tel" id="delivery-phone" placeholder="请输入您的联系电话" required>
+                <label for="customer-phone">联系电话</label>
+                <input type="tel" id="customer-phone" placeholder="请输入您的联系电话" required>
             </div>
             <div class="form-group">
-                <label for="delivery-name">收件人姓名</label>
-                <input type="text" id="delivery-name" placeholder="请输入收件人姓名" required>
+                <label for="customer-email">电子邮箱</label>
+                <input type="email" id="customer-email" placeholder="请输入您的电子邮箱" required>
             </div>
             <div class="form-group">
-                <label for="delivery-note">备注 (可选)</label>
-                <textarea id="delivery-note" rows="2" placeholder="如有特殊要求请备注"></textarea>
+                <label for="customer-address">配送地址</label>
+                <textarea id="customer-address" rows="3" placeholder="请输入您的详细地址" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="order-notes">备注 (可选)</label>
+                <textarea id="order-notes" rows="2" placeholder="如有特殊要求请备注"></textarea>
             </div>
             <button type="submit" class="payment-button">确认订单 RM${total.toFixed(2)}</button>
         </form>
@@ -626,28 +645,32 @@ function showCashPaymentForm(container, total) {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<div class="button-spinner"></div> 处理中...';
             
-            setTimeout(() => {
-                // 清空购物车
-                cart = [];
-                
-                // 更新购物车面板
-                saveCartToStorage();
-                updateCartPanel();
-                
-                // 显示支付成功
-                showPaymentSuccess(container.closest('.payment-panel'));
-            }, 2000);
+            // 调用confirmPayment发送订单数据到服务器
+            confirmPayment('货到付款');
         });
     }
 }
 
 // 显示支付成功
-function showPaymentSuccess(panel) {
+function showPaymentSuccess(panel, paymentMethod) {
+    // 确保panel是DOM元素
+    if (typeof panel === 'string') {
+        panel = document.querySelector(panel);
+    }
+
+    let paymentMethodText = '完成支付';
+    if (paymentMethod === '货到付款') {
+        paymentMethodText = '选择货到付款';
+    } else if (paymentMethod === 'TNG eWallet') {
+        paymentMethodText = '通过TNG eWallet支付';
+    }
+
     panel.innerHTML = `
         <div class="payment-success">
             <span class="material-icons">check_circle</span>
             <h3>订单提交成功!</h3>
-            <p>感谢您的购买。</p>
+            <p>您已成功${paymentMethodText}。</p>
+            <p>订单号: #${Math.floor(Math.random() * 100000)}</p>
             <p>我们会尽快为您安排发货。</p>
             <button class="payment-button" id="success-close-btn">完成</button>
         </div>
@@ -791,7 +814,7 @@ function confirmPayment(paymentMethod) {
         items: cart,
         totalAmount: calculateTotal(),
         paymentMethod: paymentMethod,
-        notes: document.getElementById('order-notes').value
+        notes: document.getElementById('order-notes') ? document.getElementById('order-notes').value : ''
     };
     
     // 发送订单数据到服务器
@@ -806,15 +829,28 @@ function confirmPayment(paymentMethod) {
     .then(data => {
         if (data.status === 'success') {
             // 显示成功信息
-            showPaymentSuccess(paymentMethod);
+            const panel = document.querySelector('.payment-panel');
+            showPaymentSuccess(panel, paymentMethod);
             // 清空购物车
             clearCart();
         } else {
             alert('订单提交失败: ' + data.message);
+            // 恢复提交按钮状态
+            const submitBtn = document.querySelector('.payment-button');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '确认订单 RM' + calculateTotal().toFixed(2);
+            }
         }
     })
     .catch(error => {
         console.error('Error:', error);
         alert('提交订单时发生错误，请稍后再试');
+        // 恢复提交按钮状态
+        const submitBtn = document.querySelector('.payment-button');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '确认订单 RM' + calculateTotal().toFixed(2);
+        }
     });
 } 
