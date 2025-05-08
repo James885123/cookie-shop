@@ -680,20 +680,20 @@ function handleWhatsAppClick(e, button, container) {
     // 获取电话号码
     const phone = button.id === 'whatsapp-merchant-1' ? '60164492534' : '60124265411';
     
-    // 准备商品清单文本 - 短版本，确保能够正确传递
+    // 准备商品清单文本 - 简洁版本
     const itemsList = cart.map(item => 
-        `${item.name} x${item.quantity}: RM${(item.price * item.quantity).toFixed(2)}`
-    ).join(' | ');
+        `${item.name}x${item.quantity}:RM${(item.price * item.quantity).toFixed(2)}`
+    ).join(', ');
     
-    // 创建消息内容
-    const messageText = `您好，我想订购乔乐曲奇：\n\n商品：${itemsList}\n总金额: RM${calculateTotal().toFixed(2)}\n\n请联系我确认订单详情，谢谢！`;
+    // 创建简洁消息内容
+    const simpleMessage = `订购乔乐曲奇 总金额:RM${calculateTotal().toFixed(2)}`;
     
-    // 使用编码后的消息
-    const encodedMessage = encodeURIComponent(messageText);
+    // 使用简洁版本的消息
+    const encodedMessage = encodeURIComponent(simpleMessage);
     console.log("编码后消息:", encodedMessage);
     
-    // 强制使用WhatsApp Web打开
-    window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`, '_blank');
+    // 使用手机版WhatsApp链接
+    window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`, '_blank');
     
     // 关闭支付面板
     const paymentOverlay = container.closest('.payment-overlay');
