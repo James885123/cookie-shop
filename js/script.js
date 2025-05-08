@@ -592,7 +592,16 @@ function showTngPaymentForm(container, total) {
 // 显示货到付款表单
 function showCashPaymentForm(container, total) {
     // 生成商品清单文本
-    const itemsList = cart.map(item => `${item.name} x ${item.quantity} (RM${(item.price * item.quantity).toFixed(2)})`).join('%0A');
+    let itemsListText = '';
+    cart.forEach(item => {
+        itemsListText += `${item.name} x ${item.quantity} (RM${(item.price * item.quantity).toFixed(2)})\n`;
+    });
+    
+    // 准备消息文本
+    const messageText = `您好，我想订购乔乐曲奇：\n\n${itemsListText}\n总金额: RM${total.toFixed(2)}\n\n请联系我确认订单详情，谢谢！`;
+    
+    // 编码消息文本用于URL
+    const encodedMessage = encodeURIComponent(messageText);
     
     container.innerHTML = `
         <div class="whatsapp-payment">
@@ -602,12 +611,24 @@ function showCashPaymentForm(container, total) {
             <h3>通过WhatsApp下单</h3>
             <p>点击下方按钮，我们的客服将通过WhatsApp与您联系</p>
             <p>订单总金额: <strong>RM${total.toFixed(2)}</strong></p>
+            <div class="whatsapp-orders-preview">
+                <h4>您的订单详情：</h4>
+                <div class="whatsapp-order-items">
+                    ${cart.map(item => `
+                        <div class="whatsapp-order-item">
+                            <span class="item-name">${item.name}</span>
+                            <span class="item-quantity">x ${item.quantity}</span>
+                            <span class="item-price">RM${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
             <div class="whatsapp-contacts">
-                <a href="https://wa.me/60164492534?text=您好，我想订购乔乐曲奇：%0A%0A${itemsList}%0A%0A总金额: RM${total.toFixed(2)}%0A%0A请联系我确认订单详情，谢谢！" target="_blank" class="whatsapp-button">
+                <a href="https://wa.me/60164492534?text=${encodedMessage}" target="_blank" class="whatsapp-button">
                     <span class="whatsapp-button-icon"></span>
                     联系商家一 (016-4492534)
                 </a>
-                <a href="https://wa.me/60124265411?text=您好，我想订购乔乐曲奇：%0A%0A${itemsList}%0A%0A总金额: RM${total.toFixed(2)}%0A%0A请联系我确认订单详情，谢谢！" target="_blank" class="whatsapp-button whatsapp-button-alt">
+                <a href="https://wa.me/60124265411?text=${encodedMessage}" target="_blank" class="whatsapp-button whatsapp-button-alt">
                     <span class="whatsapp-button-icon"></span>
                     联系商家二 (012-4265411)
                 </a>
