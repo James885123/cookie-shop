@@ -434,10 +434,34 @@ function showPaymentOptions(total) {
     
     const totalItems = cart.reduce((count, item) => count + item.quantity, 0);
     
+    // 检测是否为移动设备
+    const isMobile = window.innerWidth < 768;
+    
     const paymentPanel = document.createElement('div');
     paymentPanel.className = 'payment-panel';
-    paymentPanel.style.maxHeight = '85vh';
+    paymentPanel.style.maxHeight = isMobile ? '90vh' : '85vh';
     paymentPanel.style.overflow = 'auto';
+    
+    let orderItemsHTML = '';
+    // 移动设备显示简化版本
+    if (isMobile && cart.length > 3) {
+        // 只显示前3个商品
+        orderItemsHTML = cart.slice(0, 3).map(item => `
+            <div class="order-item">
+                <div class="order-item-name">${item.name} x ${item.quantity}</div>
+                <div class="order-item-price">RM${(item.price * item.quantity).toFixed(2)}</div>
+            </div>
+        `).join('') + `<div class="order-item-more">+${cart.length - 3} 个商品...</div>`;
+    } else {
+        // 电脑端显示所有商品
+        orderItemsHTML = cart.map(item => `
+            <div class="order-item">
+                <div class="order-item-name">${item.name} x ${item.quantity}</div>
+                <div class="order-item-price">RM${(item.price * item.quantity).toFixed(2)}</div>
+            </div>
+        `).join('');
+    }
+    
     paymentPanel.innerHTML = `
         <div class="payment-header">
             <h3>选择支付方式</h3>
@@ -446,12 +470,7 @@ function showPaymentOptions(total) {
         <div class="payment-order-summary">
             <h4>订单摘要</h4>
             <div class="order-items">
-                ${cart.map(item => `
-                    <div class="order-item">
-                        <div class="order-item-name">${item.name} x ${item.quantity}</div>
-                        <div class="order-item-price">RM${(item.price * item.quantity).toFixed(2)}</div>
-                    </div>
-                `).join('')}
+                ${orderItemsHTML}
             </div>
             <div class="order-total">
                 <div>共 ${totalItems} 件商品</div>
@@ -605,11 +624,14 @@ function showCashPaymentForm(container, total) {
     // 编码消息文本用于URL
     const encodedMessage = encodeURIComponent(messageText);
     
+    // 检测是否为移动设备
+    const isMobile = window.innerWidth < 768;
+    
     container.innerHTML = `
         <div class="whatsapp-payment">
-            <div class="whatsapp-icon">
+            ${!isMobile ? `<div class="whatsapp-icon">
                 <img src="img/whatsapp-icon.png" alt="WhatsApp" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'80\\' height=\\'80\\'><rect width=\\'80\\' height=\\'80\\' rx=\\'15\\' fill=\\'%2325D366\\'/><path d=\\'M55,40c0,8.27-6.73,15-15,15c-2.64,0-5.12-0.69-7.27-1.89L25,55l1.89-7.03C25.69,45.12,25,42.64,25,40c0-8.27,6.73-15,15-15S55,31.73,55,40z M40,30c-5.51,0-10,4.49-10,10c0,2.2,0.72,4.23,1.94,5.87l-1.25,4.67l4.86-1.25c1.59,1.05,3.48,1.66,5.52,1.66c5.51,0,10-4.49,10-10C50,34.49,45.51,30,40,30z M45,42.5c0,0.28-0.22,0.5-0.5,0.5H42v2.5c0,0.28-0.22,0.5-0.5,0.5h-3c-0.28,0-0.5-0.22-0.5-0.5V43h-2.5c-0.28,0-0.5-0.22-0.5-0.5v-3c0-0.28,0.22-0.5,0.5-0.5H38v-2.5c0-0.28,0.22-0.5,0.5-0.5h3c0.28,0,0.5,0.22,0.5,0.5V39h2.5c0.28,0,0.5,0.22,0.5,0.5V42.5z\\' fill=\\'white\\'/></svg>';">
-            </div>
+            </div>` : ''}
             <h3>通过WhatsApp下单</h3>
             <p>点击下方按钮，我们的客服将通过WhatsApp与您联系</p>
             <p>订单总金额: <strong>RM${total.toFixed(2)}</strong></p>
