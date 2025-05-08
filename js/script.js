@@ -462,8 +462,8 @@ function showPaymentOptions(total) {
                 <span>TNG eWallet</span>
             </div>
             <div class="payment-option" data-method="cash">
-                <span class="material-icons">payments</span>
-                <span>货到付款</span>
+                <span class="material-icons">whatsapp</span>
+                <span>WhatsApp</span>
             </div>
         </div>
         <div class="payment-details"></div>
@@ -546,30 +546,12 @@ function showTngPaymentForm(container, total) {
         <div class="tng-payment-form">
             <p>请扫描下方二维码使用TNG eWallet支付</p>
             <div class="tng-qrcode">
-                <img src="img/tng-qrcode.svg" alt="TNG QR Code" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23f1f1f1\\'/><rect x=\\'50\\' y=\\'50\\' width=\\'100\\' height=\\'100\\' fill=\\'%23FF6600\\'/><rect x=\\'70\\' y=\\'70\\' width=\\'60\\' height=\\'60\\' fill=\\'white\\'/></svg>';">
+                <img src="img/tng-qr-rebacca.jpg" alt="TNG QR Code" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23f1f1f1\\'/><rect x=\\'50\\' y=\\'50\\' width=\\'100\\' height=\\'100\\' fill=\\'%230062cc\\'/><text x=\\'100\\' y=\\'145\\' font-family=\\'Arial\\' font-size=\\'12\\' fill=\\'white\\' text-anchor=\\'middle\\'>Touch &apos;n Go eWallet</text></svg>';">
             </div>
+            <p>收款人: <strong>REBACCA POH</strong></p>
             <p>金额: <strong>RM${total.toFixed(2)}</strong></p>
-            <div class="form-group">
-                <label for="customer-name">收件人姓名</label>
-                <input type="text" id="customer-name" placeholder="请输入收件人姓名" required>
-            </div>
-            <div class="form-group">
-                <label for="customer-phone">联系电话</label>
-                <input type="tel" id="customer-phone" placeholder="请输入您的联系电话" required>
-            </div>
-            <div class="form-group">
-                <label for="customer-email">电子邮箱</label>
-                <input type="email" id="customer-email" placeholder="请输入您的电子邮箱" required>
-            </div>
-            <div class="form-group">
-                <label for="customer-address">配送地址</label>
-                <textarea id="customer-address" rows="3" placeholder="请输入您的详细地址" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="order-notes">备注 (可选)</label>
-                <textarea id="order-notes" rows="2" placeholder="如有特殊要求请备注"></textarea>
-            </div>
-            <button class="payment-button" id="tng-confirm-btn">确认支付</button>
+            <p class="tng-instruction">扫描此二维码使用您的银行应用或电子钱包转账</p>
+            <button class="payment-button" id="tng-confirm-btn">确认付款</button>
         </div>
     `;
     
@@ -602,57 +584,55 @@ function showTngPaymentForm(container, total) {
             document.head.appendChild(spinnerStyle);
             
             // 调用confirmPayment函数发送订单到服务器
-            confirmPayment('TNG eWallet');
+            confirmTngPayment();
         });
     }
 }
 
 // 显示货到付款表单
 function showCashPaymentForm(container, total) {
+    // 生成商品清单文本
+    const itemsList = cart.map(item => `${item.name} x ${item.quantity} (RM${(item.price * item.quantity).toFixed(2)})`).join('%0A');
+    
     container.innerHTML = `
-        <form class="cash-payment-form" id="cash-payment-form">
-            <div class="form-group">
-                <label for="customer-name">收件人姓名</label>
-                <input type="text" id="customer-name" placeholder="请输入收件人姓名" required>
+        <div class="whatsapp-payment">
+            <div class="whatsapp-icon">
+                <img src="img/whatsapp-icon.png" alt="WhatsApp" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'80\\' height=\\'80\\'><rect width=\\'80\\' height=\\'80\\' rx=\\'15\\' fill=\\'%2325D366\\'/><path d=\\'M55,40c0,8.27-6.73,15-15,15c-2.64,0-5.12-0.69-7.27-1.89L25,55l1.89-7.03C25.69,45.12,25,42.64,25,40c0-8.27,6.73-15,15-15S55,31.73,55,40z M40,30c-5.51,0-10,4.49-10,10c0,2.2,0.72,4.23,1.94,5.87l-1.25,4.67l4.86-1.25c1.59,1.05,3.48,1.66,5.52,1.66c5.51,0,10-4.49,10-10C50,34.49,45.51,30,40,30z M45,42.5c0,0.28-0.22,0.5-0.5,0.5H42v2.5c0,0.28-0.22,0.5-0.5,0.5h-3c-0.28,0-0.5-0.22-0.5-0.5V43h-2.5c-0.28,0-0.5-0.22-0.5-0.5v-3c0-0.28,0.22-0.5,0.5-0.5H38v-2.5c0-0.28,0.22-0.5,0.5-0.5h3c0.28,0,0.5,0.22,0.5,0.5V39h2.5c0.28,0,0.5,0.22,0.5,0.5V42.5z\\' fill=\\'white\\'/></svg>';">
             </div>
-            <div class="form-group">
-                <label for="customer-phone">联系电话</label>
-                <input type="tel" id="customer-phone" placeholder="请输入您的联系电话" required>
+            <h3>通过WhatsApp下单</h3>
+            <p>点击下方按钮，我们的客服将通过WhatsApp与您联系</p>
+            <p>订单总金额: <strong>RM${total.toFixed(2)}</strong></p>
+            <div class="whatsapp-contacts">
+                <a href="https://wa.me/60164492534?text=您好，我想订购乔乐曲奇：%0A%0A${itemsList}%0A%0A总金额: RM${total.toFixed(2)}%0A%0A请联系我确认订单详情，谢谢！" target="_blank" class="whatsapp-button">
+                    <span class="whatsapp-button-icon"></span>
+                    联系商家一 (016-4492534)
+                </a>
+                <a href="https://wa.me/60124265411?text=您好，我想订购乔乐曲奇：%0A%0A${itemsList}%0A%0A总金额: RM${total.toFixed(2)}%0A%0A请联系我确认订单详情，谢谢！" target="_blank" class="whatsapp-button whatsapp-button-alt">
+                    <span class="whatsapp-button-icon"></span>
+                    联系商家二 (012-4265411)
+                </a>
             </div>
-            <div class="form-group">
-                <label for="customer-email">电子邮箱</label>
-                <input type="email" id="customer-email" placeholder="请输入您的电子邮箱" required>
-            </div>
-            <div class="form-group">
-                <label for="customer-address">配送地址</label>
-                <textarea id="customer-address" rows="3" placeholder="请输入您的详细地址" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="order-notes">备注 (可选)</label>
-                <textarea id="order-notes" rows="2" placeholder="如有特殊要求请备注"></textarea>
-            </div>
-            <button type="submit" class="payment-button">确认订单 RM${total.toFixed(2)}</button>
-        </form>
+        </div>
     `;
     
-    // 表单提交事件
-    const form = container.querySelector('#cash-payment-form');
-    console.log("货到付款表单:", form); // 添加调试信息
-    
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            console.log("表单提交事件触发"); // 添加调试信息
-            e.preventDefault();
-            
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<div class="button-spinner"></div> 处理中...';
-            
-            // 调用confirmPayment发送订单数据到服务器
-            confirmPayment('货到付款');
+    // WhatsApp按钮点击事件
+    const whatsappBtns = container.querySelectorAll('.whatsapp-button');
+    if (whatsappBtns.length > 0) {
+        whatsappBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 关闭支付面板
+                const paymentOverlay = container.closest('.payment-overlay');
+                setTimeout(() => {
+                    paymentOverlay.classList.remove('show');
+                    setTimeout(() => {
+                        paymentOverlay.remove();
+                    }, 400);
+                }, 500);
+                
+                // 清空购物车
+                clearCart();
+            });
         });
-    } else {
-        console.error("找不到货到付款表单元素!");
     }
 }
 
@@ -664,8 +644,8 @@ function showPaymentSuccess(panel, paymentMethod) {
     }
 
     let paymentMethodText = '完成支付';
-    if (paymentMethod === '货到付款') {
-        paymentMethodText = '选择货到付款';
+    if (paymentMethod === 'WhatsApp') {
+        paymentMethodText = '选择通过WhatsApp联系';
     } else if (paymentMethod === 'TNG eWallet') {
         paymentMethodText = '通过TNG eWallet支付';
     }
@@ -858,4 +838,13 @@ function confirmPayment(paymentMethod) {
             submitBtn.innerHTML = '确认订单 RM' + calculateTotal().toFixed(2);
         }
     });
+}
+
+// 确认TNG支付
+function confirmTngPayment() {
+    // 显示成功信息
+    const panel = document.querySelector('.payment-panel');
+    showPaymentSuccess(panel, 'TNG eWallet');
+    // 清空购物车
+    clearCart();
 } 
