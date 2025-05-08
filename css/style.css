@@ -461,47 +461,81 @@ nav ul li a:hover {
     color: var(--dark-color);
 }
 
+/* 通用表单样式 */
 .form-group {
     margin-bottom: 20px;
+    position: relative;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: 500;
     color: var(--dark-color);
-    font-size: 0.95rem;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #e2e2dc;
-    border-radius: 4px;
-    font-family: inherit;
-    font-size: 0.95rem;
-    background-color: var(--light-color);
+    font-size: 1rem;
     transition: all 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 5px rgba(209, 122, 70, 0.3);
 }
 
 .form-group textarea {
     resize: vertical;
+    min-height: 80px;
 }
 
-.contact-form .btn {
-    background: linear-gradient(to right, var(--secondary-color), var(--accent-color3));
+/* 货到付款表单 */
+.cash-payment-form {
+    padding: 10px;
 }
 
-.contact-form .btn:hover {
-    background: linear-gradient(to right, var(--accent-color3), var(--secondary-color));
+.cash-payment-form .payment-button {
+    width: 100%;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(209, 122, 70, 0.3);
+}
+
+.cash-payment-form .payment-button:hover {
+    background: #c26a3a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(209, 122, 70, 0.4);
+}
+
+.cash-payment-form .payment-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(209, 122, 70, 0.3);
+}
+
+/* 支付表单输入框样式 */
+.cash-payment-form input,
+.cash-payment-form textarea,
+.tng-payment-form input,
+.tng-payment-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f9f9f9;
+}
+
+.cash-payment-form input:focus,
+.cash-payment-form textarea:focus,
+.tng-payment-form input:focus,
+.tng-payment-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(209, 122, 70, 0.2);
+    background: white;
 }
 
 /* 页脚样式 */
@@ -970,46 +1004,6 @@ footer {
     background: #ccc;
     cursor: not-allowed;
     box-shadow: none;
-}
-
-/* 货到付款表单 */
-.form-group {
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--dark-color);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: #f9f9f9;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(209, 122, 70, 0.2);
-    background: white;
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 80px;
 }
 
 /* 支付成功消息 */

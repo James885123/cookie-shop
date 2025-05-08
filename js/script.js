@@ -610,7 +610,7 @@ function showTngPaymentForm(container, total) {
 // 显示货到付款表单
 function showCashPaymentForm(container, total) {
     container.innerHTML = `
-        <form class="cash-payment-form">
+        <form class="cash-payment-form" id="cash-payment-form">
             <div class="form-group">
                 <label for="customer-name">收件人姓名</label>
                 <input type="text" id="customer-name" placeholder="请输入收件人姓名" required>
@@ -636,9 +636,12 @@ function showCashPaymentForm(container, total) {
     `;
     
     // 表单提交事件
-    const form = container.querySelector('form');
+    const form = container.querySelector('#cash-payment-form');
+    console.log("货到付款表单:", form); // 添加调试信息
+    
     if (form) {
         form.addEventListener('submit', function(e) {
+            console.log("表单提交事件触发"); // 添加调试信息
             e.preventDefault();
             
             const submitBtn = this.querySelector('button[type="submit"]');
@@ -648,6 +651,8 @@ function showCashPaymentForm(container, total) {
             // 调用confirmPayment发送订单数据到服务器
             confirmPayment('货到付款');
         });
+    } else {
+        console.error("找不到货到付款表单元素!");
     }
 }
 
