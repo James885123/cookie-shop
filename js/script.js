@@ -648,11 +648,11 @@ function showCashPaymentForm(container, total) {
                 </div>
             </div>
             <div class="whatsapp-contacts">
-                <a href="https://wa.me/60164492534?text=${encodedMessage}" target="_blank" class="whatsapp-button">
+                <a href="https://wa.me/60164492534?text=${encodedMessage}" target="_blank" class="whatsapp-button" id="whatsapp-merchant-1">
                     <span class="whatsapp-button-icon"></span>
                     联系商家一 (016-4492534)
                 </a>
-                <a href="https://wa.me/60124265411?text=${encodedMessage}" target="_blank" class="whatsapp-button whatsapp-button-alt">
+                <a href="https://wa.me/60124265411?text=${encodedMessage}" target="_blank" class="whatsapp-button whatsapp-button-alt" id="whatsapp-merchant-2">
                     <span class="whatsapp-button-icon"></span>
                     联系商家二 (012-4265411)
                 </a>
@@ -661,24 +661,39 @@ function showCashPaymentForm(container, total) {
     `;
     
     // WhatsApp按钮点击事件
-    const whatsappBtns = container.querySelectorAll('.whatsapp-button');
-    if (whatsappBtns.length > 0) {
-        whatsappBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // 关闭支付面板
-                const paymentOverlay = container.closest('.payment-overlay');
-                setTimeout(() => {
-                    paymentOverlay.classList.remove('show');
-                    setTimeout(() => {
-                        paymentOverlay.remove();
-                    }, 400);
-                }, 500);
-                
-                // 清空购物车
-                clearCart();
-            });
-        });
-    }
+    document.getElementById('whatsapp-merchant-1').addEventListener('click', function(e) {
+        handleWhatsAppClick(e, this, container);
+    });
+    
+    document.getElementById('whatsapp-merchant-2').addEventListener('click', function(e) {
+        handleWhatsAppClick(e, this, container);
+    });
+}
+
+// 处理WhatsApp链接点击
+function handleWhatsAppClick(e, button, container) {
+    console.log("WhatsApp按钮点击：", button.id);
+    
+    // 获取链接
+    const whatsappUrl = button.getAttribute('href');
+    
+    // 在新窗口打开WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // 关闭支付面板
+    const paymentOverlay = container.closest('.payment-overlay');
+    setTimeout(() => {
+        paymentOverlay.classList.remove('show');
+        setTimeout(() => {
+            paymentOverlay.remove();
+        }, 400);
+    }, 500);
+    
+    // 清空购物车
+    clearCart();
+    
+    // 阻止默认行为，确保我们可以自己控制链接的打开
+    e.preventDefault();
 }
 
 // 显示支付成功
