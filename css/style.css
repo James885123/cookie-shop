@@ -352,11 +352,12 @@ nav ul li a:hover {
     margin: 10px 0 20px;
 }
 
-/* 关于我们区域样式 */
+/* 关于我们区域富士风格优化 */
 #about {
-    background-color: var(--light-color);
+    background-color: #f9f6f0;
     position: relative;
     overflow: hidden;
+    padding: 100px 0;
 }
 
 #about::before {
@@ -383,6 +384,19 @@ nav ul li a:hover {
     z-index: 1;
 }
 
+#about h2 {
+    font-family: 'Microsoft YaHei', serif;
+    letter-spacing: 2px;
+    margin-bottom: 60px;
+    position: relative;
+}
+
+#about h2::after {
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, #d17a46, #8c7363);
+}
+
 .about-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -392,26 +406,44 @@ nav ul li a:hover {
     z-index: 2;
 }
 
-.about-text p {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: var(--light-text);
+.about-image {
+    position: relative;
+}
+
+.about-image::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #d17a46;
+    top: 15px;
+    left: 15px;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.about-image-container {
+    position: relative;
+    overflow: hidden;
 }
 
 .about-image img {
     border-radius: 4px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    border: 5px solid white;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    border: 8px solid white;
     background-color: #f5efe6;
     width: 100%;
     height: 500px;
     object-fit: contain;
     position: relative;
+    transition: all 0.5s ease;
 }
 
-/* 添加占位图样式 */
-.about-image img::before {
-    content: '烘焙坊照片';
+.about-image:hover img {
+    transform: scale(1.02);
+}
+
+.about-image-placeholder {
     position: absolute;
     top: 0;
     left: 0;
@@ -420,9 +452,90 @@ nav ul li a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--secondary-color);
     color: white;
-    font-size: 1.5rem;
-    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color3));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.placeholder-active .about-image-placeholder {
+    opacity: 1;
+}
+
+.about-text {
+    position: relative;
+    padding: 20px;
+}
+
+.about-text::before {
+    content: '"';
+    position: absolute;
+    top: -50px;
+    left: -20px;
+    font-size: 150px;
+    color: rgba(209, 122, 70, 0.1);
+    font-family: Georgia, serif;
+    line-height: 1;
+}
+
+.about-text p {
+    font-size: 1.05rem;
+    line-height: 2;
+    color: #675c58;
+    margin-bottom: 20px;
+    text-align: justify;
+    position: relative;
+    padding-left: 20px;
+    font-family: 'Microsoft YaHei', serif;
+}
+
+.about-text p:not(:last-child) {
+    border-bottom: 1px dashed rgba(209, 122, 70, 0.2);
+    padding-bottom: 15px;
+}
+
+.about-text p::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    background-color: #d17a46;
+    border-radius: 50%;
+}
+
+.about-text p:first-of-type {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #584642;
+}
+
+.about-text p:first-of-type::before {
+    background-color: #8c7363;
+    width: 10px;
+    height: 10px;
+}
+
+.about-text-highlight {
+    color: #d17a46;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .about-image::before {
+        display: none;
+    }
+    
+    .about-text p {
+        font-size: 1rem;
+        line-height: 1.8;
+    }
 }
 
 /* 联系我们区域样式 */
