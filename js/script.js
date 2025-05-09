@@ -401,15 +401,30 @@ function showPaymentOptions(total) {
     const paymentOptions = panel.querySelectorAll('.payment-option');
     const paymentDetails = panel.querySelector('.payment-details');
     
+    // Clear payment details initially
+    paymentDetails.innerHTML = '';
+    
+    // Store currently selected payment method
+    let currentPaymentMethod = null;
+    
     paymentOptions.forEach(option => {
         option.addEventListener('click', function() {
             const method = this.getAttribute('data-method');
+            
+            // Skip if the same option is clicked again
+            if (currentPaymentMethod === method) return;
+            
+            // Update current method
+            currentPaymentMethod = method;
             
             // Remove selected class from all options
             paymentOptions.forEach(opt => opt.classList.remove('selected'));
             
             // Add selected class to clicked option
             this.classList.add('selected');
+            
+            // Clear existing content
+            paymentDetails.innerHTML = '';
             
             // Show appropriate payment form
             if (method === 'tng') {
@@ -420,11 +435,12 @@ function showPaymentOptions(total) {
         });
     });
     
-    // Automatically select first payment option
-    if (paymentOptions.length > 0) {
-        setTimeout(() => {
-            paymentOptions[0].click();
-        }, 300);
+    // Select TNG payment option by default (but don't trigger click yet)
+    const tngOption = panel.querySelector('.payment-option[data-method="tng"]');
+    if (tngOption) {
+        tngOption.classList.add('selected');
+        currentPaymentMethod = 'tng';
+        showTngPaymentForm(paymentDetails, total);
     }
 }
 
@@ -436,14 +452,17 @@ function showTngPaymentForm(container, total) {
                 <img src="img/tng-qr-rebacca.jpg" alt="TNG QR Code" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'250\'><rect width=\'250\' height=\'250\' fill=\'%23eee\'/><text x=\'125\' y=\'125\' font-family=\'Arial\' font-size=\'16\' text-anchor=\'middle\' fill=\'%23888\'>QR Code</text></svg>';">
             </div>
             <p class="tng-instruction">Scan the QR code with your Touch 'n Go eWallet app, then click "Confirm Payment" below.</p>
-            <button class="payment-button" onclick="confirmTngPayment()">Confirm Payment</button>
+            <button class="payment-button" id="tng-confirm-btn">Confirm Payment</button>
         </div>
     `;
     
-    // Add global confirmTngPayment function
-    window.confirmTngPayment = function() {
-        confirmPayment('tng');
-    };
+    // Add event listener directly to the button instead of using onclick
+    const confirmBtn = container.querySelector('#tng-confirm-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            confirmPayment('tng');
+        });
+    }
 }
 
 // Show cash payment form
@@ -474,24 +493,33 @@ function showCashPaymentForm(container, total) {
                 </div>
             </div>
             <div class="whatsapp-contacts">
-                <a href="https://wa.me/60123456789?text=${encodedMessage}" target="_blank" class="whatsapp-button">
+                <a href="https://wa.me/60123456789?text=${encodedMessage}" target="_blank" class="whatsapp-button" id="whatsapp-contact-btn">
                     <span class="whatsapp-button-icon"></span>
                     Contact on WhatsApp
                 </a>
             </div>
             <p style="margin-top: 15px; font-size: 0.9rem; color: #666; text-align: center;">After sending your message, click the button below to confirm your order</p>
-            <button class="payment-button" style="margin-top: 15px;" onclick="confirmPayment('whatsapp')">Confirm Order</button>
+            <button class="payment-button" id="whatsapp-confirm-btn" style="margin-top: 15px;">Confirm Order</button>
         </div>
     `;
     
-    // Add event for the whatsapp button
-    const whatsappButton = container.querySelector('.whatsapp-button');
-    whatsappButton.addEventListener('click', function(e) {
-        // Open in new tab but don't need to handle confirmation separately
-        // as we now have a dedicated confirm button
-        this.style.backgroundColor = '#128C7E';
-        this.textContent = 'WhatsApp Opened';
-    });
+    // Add event for the whatsapp contact button
+    const whatsappButton = container.querySelector('#whatsapp-contact-btn');
+    if (whatsappButton) {
+        whatsappButton.addEventListener('click', function(e) {
+            // Mark as clicked but don't auto-confirm
+            this.style.backgroundColor = '#128C7E';
+            this.textContent = 'WhatsApp Opened';
+        });
+    }
+    
+    // Add event for the confirm button
+    const confirmButton = container.querySelector('#whatsapp-confirm-btn');
+    if (confirmButton) {
+        confirmButton.addEventListener('click', function() {
+            confirmPayment('whatsapp');
+        });
+    }
 }
 
 // Show payment success
@@ -656,7 +684,4 @@ function confirmPayment(paymentMethod) {
 window.openCartPanel = openCartPanel;
 window.closeCartPanel = closeCartPanel;
 window.handleCheckout = handleCheckout;
-window.confirmPayment = confirmPayment;
-window.confirmTngPayment = function() {
-    confirmPayment('tng');
-}; 
+window.confirmPayment = confirmPayment; 
