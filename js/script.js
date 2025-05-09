@@ -419,6 +419,13 @@ function showPaymentOptions(total) {
             }
         });
     });
+    
+    // Automatically select first payment option
+    if (paymentOptions.length > 0) {
+        setTimeout(() => {
+            paymentOptions[0].click();
+        }, 300);
+    }
 }
 
 // Show TNG payment form
@@ -472,46 +479,19 @@ function showCashPaymentForm(container, total) {
                     Contact on WhatsApp
                 </a>
             </div>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: #666; text-align: center;">After sending your message, click the button below to confirm your order</p>
+            <button class="payment-button" style="margin-top: 15px;" onclick="confirmPayment('whatsapp')">Confirm Order</button>
         </div>
     `;
     
     // Add event for the whatsapp button
     const whatsappButton = container.querySelector('.whatsapp-button');
     whatsappButton.addEventListener('click', function(e) {
-        handleWhatsAppClick(e, this, container);
+        // Open in new tab but don't need to handle confirmation separately
+        // as we now have a dedicated confirm button
+        this.style.backgroundColor = '#128C7E';
+        this.textContent = 'WhatsApp Opened';
     });
-}
-
-// Handle WhatsApp click
-function handleWhatsAppClick(e, button, container) {
-    const panel = button.closest('.payment-panel');
-    
-    // Set a flag to avoid double confirmation
-    if (button.dataset.clicked === 'true') return;
-    
-    // Set the flag
-    button.dataset.clicked = 'true';
-    
-    // Create a message in the container
-    const message = document.createElement('p');
-    message.className = 'whatsapp-confirmation';
-    message.style.textAlign = 'center';
-    message.style.marginTop = '15px';
-    message.style.color = '#25D366';
-    message.innerHTML = 'Opening WhatsApp... <br> Press <strong>Confirm Order</strong> after sending your message.';
-    
-    container.appendChild(message);
-    
-    // Add confirm button
-    const confirmButton = document.createElement('button');
-    confirmButton.className = 'payment-button';
-    confirmButton.style.marginTop = '15px';
-    confirmButton.textContent = 'Confirm Order';
-    confirmButton.addEventListener('click', function() {
-        confirmPayment('whatsapp');
-    });
-    
-    container.appendChild(confirmButton);
 }
 
 // Show payment success
