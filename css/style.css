@@ -402,10 +402,10 @@ nav ul li a:hover {
     border-radius: 4px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border: 5px solid white;
-    background-color: var(--secondary-color);
+    background-color: #f5efe6;
     width: 100%;
-    height: 300px;
-    object-fit: cover;
+    height: 500px;
+    object-fit: contain;
     position: relative;
 }
 
@@ -429,17 +429,32 @@ nav ul li a:hover {
 #contact {
     position: relative;
     overflow: hidden;
+    background-color: #fbf7f0;
+    padding: 100px 0;
 }
 
 #contact::before {
     content: '';
     position: absolute;
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     background: linear-gradient(135deg, rgba(209, 122, 70, 0.1) 0%, rgba(203, 109, 81, 0.1) 100%);
     border-radius: 50%;
-    top: 50px;
-    right: -50px;
+    top: -50px;
+    right: -100px;
+    z-index: 1;
+}
+
+#contact::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(116, 140, 112, 0.1) 0%, rgba(85, 130, 142, 0.1) 100%);
+    border-radius: 50%;
+    bottom: -50px;
+    left: -50px;
+    z-index: 1;
 }
 
 .contact-content {
@@ -450,35 +465,175 @@ nav ul li a:hover {
     z-index: 2;
 }
 
+.contact-info {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border-top: 5px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-info::before {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(209, 122, 70, 0.05) 0%, rgba(116, 140, 112, 0.05) 100%);
+    border-radius: 50%;
+    bottom: -50px;
+    right: -50px;
+}
+
+.contact-info h3 {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.contact-info h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 50px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 2px;
+}
+
 .contact-info p {
     margin-bottom: 20px;
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--light-text);
     line-height: 1.8;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.contact-info p:before {
+    font-family: 'Material Icons';
+    font-size: 24px;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.contact-info p:nth-child(2):before {
+    content: 'location_on';
+}
+
+.contact-info p:nth-child(3):before {
+    content: 'phone';
+}
+
+.contact-info p:nth-child(4):before {
+    content: 'email';
+}
+
+.contact-info p:nth-child(5):before {
+    content: 'schedule';
 }
 
 .contact-info strong {
     color: var(--dark-color);
+    font-weight: 600;
+}
+
+.contact-form {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border-top: 5px solid var(--secondary-color);
+}
+
+.contact-form h3 {
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.contact-form h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 50px;
+    height: 3px;
+    background: var(--secondary-color);
+    border-radius: 2px;
 }
 
 /* 通用表单样式 */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     position: relative;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight: 500;
     color: var(--dark-color);
     font-size: 1rem;
     transition: all 0.3s ease;
 }
 
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f9f9f9;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(209, 122, 70, 0.2);
+    background: white;
+}
+
 .form-group textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 120px;
+}
+
+.contact-form .btn {
+    background: linear-gradient(to right, var(--secondary-color), var(--accent-color3));
+    padding: 15px 30px;
+    width: 100%;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.contact-form .btn:hover {
+    background: linear-gradient(to right, var(--accent-color3), var(--secondary-color));
+}
+
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .contact-info,
+    .contact-form {
+        padding: 30px;
+    }
 }
 
 /* 货到付款表单 */
@@ -1830,5 +1985,151 @@ footer {
     
     .whatsapp-orders-preview {
         max-height: 220px;
+    }
+}
+
+/* 互动效果样式 */
+.animated-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.animated-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 表单交互样式 */
+.form-group.active label {
+    color: var(--primary-color);
+    transform: translateY(-3px);
+    font-size: 0.9rem;
+}
+
+.form-group label {
+    transition: all 0.3s ease;
+}
+
+/* 表单提交后效果 */
+.contact-form form.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.form-success {
+    text-align: center;
+    padding: 30px 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: var(--secondary-color);
+    color: white;
+    font-size: 30px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    animation: scaleIn 0.5s ease forwards;
+}
+
+.form-success h3 {
+    color: var(--dark-color);
+    margin-bottom: 15px;
+}
+
+.form-success p {
+    color: var(--light-text);
+    margin-bottom: 25px;
+}
+
+.reset-form {
+    background: linear-gradient(to right, var(--secondary-color), var(--accent-color3));
+    transition: all 0.3s ease;
+}
+
+.reset-form:hover {
+    background: linear-gradient(to right, var(--accent-color3), var(--secondary-color));
+}
+
+/* 产品卡片悬停效果增强 */
+.product-card {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.product-card.hovered {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    transition: transform 0.4s ease-out;
+}
+
+/* 联系卡片交互效果 */
+.contact-info, 
+.contact-form {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 动画关键帧 */
+@keyframes scaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* 按钮交互效果增强 */
+.btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+    z-index: -1;
+}
+
+.btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(50, 50);
+        opacity: 0;
     }
 } 
